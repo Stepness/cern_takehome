@@ -16,18 +16,8 @@ def combinations(lst, n):
 
 def mountain_area(mountain) -> float:
     return 0.5 * (mountain['right'] - mountain['left']) * mountain['height']
-    
-def intersection_of_2(first_mountain, second_mountain):
-    rightmost_left = max(first_mountain['left'], second_mountain['left'])
-    leftmost_right = min(first_mountain['right'], second_mountain['right'])
-    intersection_base = leftmost_right - rightmost_left
-    if(intersection_base > 0):
-        intersection_height = 0.5 * intersection_base
-        intersection_area = 0.5 * intersection_base * intersection_height
-        return intersection_area    
-    return 0
 
-def intersection_of_n(mountains):
+def intersection_of_n(mountains: list):
     total_area = 0
     rightmost_left = max(mountains, key=lambda x: x['left'])
     leftmost_right = min(mountains, key=lambda x: x['right'])
@@ -38,14 +28,21 @@ def intersection_of_n(mountains):
         intersection_area = 0.5 * intersection_base * intersection_height
         return intersection_area    
     return total_area
-    
+
+def lists_of_intersections(combinations_of_n_mountains: list):
+    for list in combinations_of_n_mountains:
+        intersection_of_n(list)
+
 def PIE(mountains):
     total_area = 0
     for current_mountain in mountains:
         total_area += mountain_area(current_mountain)
     
     for index, mountain in enumerate(mountains):
-        combinations(mountains, index)
+        if(index > 1):
+            total_area += (-1**(index+1)) * lists_of_intersections(combinations(mountains, index))
+        
+    return total_area
         
 
 def main():
@@ -58,7 +55,7 @@ def main():
     
     #result = visible_area(mountains)
     #print("Visible Area:", result)
-    var = combinations(mountains, 1)
+    var = PIE(mountains)
     print(var)
 
 if __name__ == "__main__":
