@@ -3,11 +3,22 @@ def mountain_area(mountain) -> float:
     
 
 def visible_area(mountains: list) -> float:
-    for index, mountain in enumerate(mountains):
-        current_mountain_area = mountain_area(mountain)
+    visible_area = 0
+    for index, current_mountain in enumerate(mountains):
+        current_mountain_area = mountain_area(current_mountain)
         
         for previous_mountain in mountains[:index]:
-            print(mountain_area(previous_mountain))
+            rightmost_left = max(current_mountain['left'], previous_mountain['left'])
+            leftmost_right = min(current_mountain['right'], previous_mountain['right'])
+            intersection_base = leftmost_right - rightmost_left
+            if(intersection_base > 0):
+                intersection_height = 0.5 * intersection_base
+                intersection_area = 0.5 * intersection_base * intersection_height
+                
+                current_mountain_area -= intersection_area
+            
+        visible_area += current_mountain_area
+    return visible_area
             
 
 
@@ -19,6 +30,7 @@ def main():
         {'left': 0, 'right':  6, 'height': 3},
     ]
 
+    
     result = visible_area(mountains)
     print("Visible Area:", result)
 
