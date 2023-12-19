@@ -19,21 +19,21 @@ def mountain_area(mountain) -> float:
 
 def intersection_of_n(mountains: list):
     total_area = 0
-    rightmost_left = (max(mountains, key=lambda x: x['left'])['left'])
-    leftmost_right = (min(mountains, key=lambda x: x['right'])['right'])
+    rightmost_left = max(mountains, key=lambda x: x['left'])['left']
+    leftmost_right = min(mountains, key=lambda x: x['right'])['right']
     
     intersection_base = leftmost_right - rightmost_left
     if(intersection_base > 0):
         intersection_height = 0.5 * intersection_base
         intersection_area = 0.5 * intersection_base * intersection_height
-        return intersection_area    
+        return intersection_area
     return total_area
 
-def lists_of_intersections(combinations_of_n_mountains: list):
-    total_row = 0
-    for list in combinations_of_n_mountains:
-        total_row += intersection_of_n(list)
-    return total_row
+def sum_of_intersections(combinations_of_n_mountains: list):
+    sum = 0
+    for mountains in combinations_of_n_mountains:
+        sum += intersection_of_n(mountains)
+    return sum
 
 def PIE(mountains):
     total_area = 0
@@ -43,23 +43,23 @@ def PIE(mountains):
     for index, mountain in enumerate(mountains):
         if(index > 0):
             exponent = pow(-1, index)
-            current_row = exponent * lists_of_intersections(combinations(mountains, index+1))
+            current_row = exponent * sum_of_intersections(combinations(mountains, index+1))
             total_area += current_row
             
     return total_area
         
 
 def main():
-    mountains = [
-        {'left': 9, 'right': 15, 'height': 3},
-        {'left': 8, 'right': 14, 'height': 3},
-        {'left': 0, 'right':  6, 'height': 3},
-    ]
     # mountains = [
     #     {'left': 0, 'right': 6, 'height': 3},
-    #     {'left': 0, 'right': 6, 'height': 3},
-    #     {'left': 4, 'right':  6, 'height': 1},
+    #     {'left': 0, 'right':  6, 'height': 3},
+    #     {'left': 20, 'right':  30, 'height': 10},
     # ]
+    mountains = [
+        {'left': 0, 'right': 6, 'height': 3},
+        {'left': 0, 'right': 6, 'height': 3},
+        {'left': 4, 'right':  6, 'height': 1},
+    ]
     
     var = PIE(mountains)
     print(var)
