@@ -1,5 +1,3 @@
-import itertools
-    
 def _mountain_area(mountain: dict) -> float:
     return 0.5 * (mountain['right'] - mountain['left']) * mountain['height']
 
@@ -12,7 +10,7 @@ def _in_range_mountains_combinations(mountains: list, quantity: int):
             if(mountain['right'] >= next_mountain['left']):
                 temp_mountains.append(next_mountain)
         if len(temp_mountains) == quantity:
-            intersection_area +=_areas_intersection(temp_mountains)
+            intersection_area +=_intersection_area(temp_mountains)
     return intersection_area
 
 def _remove_contained_mountains(mountains: list):
@@ -23,7 +21,7 @@ def _remove_contained_mountains(mountains: list):
             mountains.pop(index + 1)
     return mountains
  
-def _areas_intersection(mountains: list) -> float:
+def _intersection_area(mountains: list) -> float:
     rightmost_left = max(mountains, key=lambda x: x['left'])['left']
     leftmost_right = min(mountains, key=lambda x: x['right'])['right']
     
@@ -35,32 +33,25 @@ def _areas_intersection(mountains: list) -> float:
         return intersection_area
     return 0
 
-def _intersections_summation(mountains_combinations: list) -> float:
-    summation = 0
-    for mountains_combination in mountains_combinations:
-        summation += _areas_intersection(mountains_combination)
-    return summation
-
 def _inclusion_exclusion_principle(mountains: list) -> float:
     total_area = 0
-    sorted_mountains = sorted(mountains, key=lambda x: x['left'])
-    useful_mountains = _remove_contained_mountains(sorted_mountains)
-    
-    for mountain in useful_mountains:
+
+    for mountain in mountains:
         total_area += _mountain_area(mountain)
 
-    for index, _ in enumerate(useful_mountains):
+    for index, _ in enumerate(mountains):
         if index > 0:
-            print(index)
             sign = pow(-1, index)
-            n_mountains_combinations = _intersections_summation(useful_mountains, index+1)
+            n_mountains_combinations = _in_range_mountains_combinations(mountains, index+1)
             current_row = sign * n_mountains_combinations
             total_area += current_row
 
     return total_area
 
 def visible_area(mountains: list) -> float:
-    return _inclusion_exclusion_principle(mountains)
+    sorted_mountains = sorted(mountains, key=lambda x: x['left'])
+    useful_mountains = _remove_contained_mountains(sorted_mountains)
+    return _inclusion_exclusion_principle(useful_mountains)
 
 if __name__ == '__main__':
     MAXIMUM_QUANTITY_OF_MOUNTAINS = 1000
@@ -76,15 +67,15 @@ if __name__ == '__main__':
     # {'left': 3, 'right': 13, 'height': 5},
     # ]
 
-    for i in range(MAXIMUM_QUANTITY_OF_MOUNTAINS):
-        temp_mountain = {'left': 0, 'right': 6, 'height': 3}
-        mountains.append(temp_mountain)
+    # for i in range(MAXIMUM_QUANTITY_OF_MOUNTAINS):
+    #     temp_mountain = {'left': 0, 'right': 6, 'height': 3}
+    #     mountains.append(temp_mountain)
 
-#     mountains = [
-#     {'left': 9, 'right': 15, 'height': 3},
-#     {'left': 8, 'right': 14, 'height': 3},
-#     {'left': 0, 'right':  6, 'height': 3},
-# ]
+    mountains = [
+    {'left': 9, 'right': 15, 'height': 3},
+    {'left': 8, 'right': 14, 'height': 3},
+    {'left': 0, 'right':  6, 'height': 3},
+    ]
     # for i in range(MAXIMUM_QUANTITY_OF_MOUNTAINS):
     #     temp_mountain = {'left': 0, 'right': 6, 'height': 3}
     #     temp_mountain['right'] = temp_mountain['right'] + i
