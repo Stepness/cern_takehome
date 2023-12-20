@@ -4,20 +4,16 @@ def _mountain_area(mountain: dict) -> float:
     return 0.5 * (mountain['right'] - mountain['left']) * mountain['height']
 
 def _in_range_mountains_combinations(mountains: list, quantity: int):
-    mountains_to_combine = []
-    
-    for i, current_mountain in enumerate(mountains):
-        temp_overlapping_mountains = []
-        temp_overlapping_mountains.append(current_mountain)
-        for _, next_mountain in enumerate(mountains[i:]):
-            if current_mountain['right'] >= next_mountain['left']:
-                temp_overlapping_mountains.append(next_mountain)
-                if len(temp_overlapping_mountains) >= quantity:
-                    for new_dict in temp_overlapping_mountains:
-                        if new_dict not in mountains_to_combine:
-                            mountains_to_combine.append(new_dict)
-            
-    return itertools.combinations(mountains_to_combine, quantity)
+    intersection_area = 0
+    for index, mountain in enumerate(mountains): 
+        temp_mountains = []
+        temp_mountains.append(mountain)
+        for j, next_mountain in enumerate(mountains[index+1:index+quantity]):
+            if(mountain['right'] >= next_mountain['left']):
+                temp_mountains.append(next_mountain)
+        if len(temp_mountains) == quantity:
+            intersection_area +=_areas_intersection(temp_mountains)
+    return intersection_area
 
 def _remove_contained_mountains(mountains: list):
     for index in range(len(mountains) - 2, -1, -1):
@@ -57,8 +53,8 @@ def _inclusion_exclusion_principle(mountains: list) -> float:
         if index > 0:
             print(index)
             sign = pow(-1, index)
-            n_mountains_combinations = _in_range_mountains_combinations(useful_mountains, index+1)
-            current_row = sign * _intersections_summation(n_mountains_combinations)
+            n_mountains_combinations = _intersections_summation(useful_mountains, index+1)
+            current_row = sign * n_mountains_combinations
             total_area += current_row
 
     return total_area
@@ -79,17 +75,20 @@ if __name__ == '__main__':
     # {'left': 3, 'right': 12, 'height': 4.5},
     # {'left': 3, 'right': 13, 'height': 5},
     # ]
-    
+
+    for i in range(MAXIMUM_QUANTITY_OF_MOUNTAINS):
+        temp_mountain = {'left': 0, 'right': 6, 'height': 3}
+        mountains.append(temp_mountain)
+
 #     mountains = [
 #     {'left': 9, 'right': 15, 'height': 3},
 #     {'left': 8, 'right': 14, 'height': 3},
 #     {'left': 0, 'right':  6, 'height': 3},
 # ]
-
-    for i in range(MAXIMUM_QUANTITY_OF_MOUNTAINS):
-        temp_mountain = {'left': 0, 'right': 6, 'height': 3}
-        temp_mountain['right'] = temp_mountain['right'] + i
-        temp_mountain['left'] = temp_mountain['left'] + i
-        mountains.append(temp_mountain)
+    # for i in range(MAXIMUM_QUANTITY_OF_MOUNTAINS):
+    #     temp_mountain = {'left': 0, 'right': 6, 'height': 3}
+    #     temp_mountain['right'] = temp_mountain['right'] + i
+    #     temp_mountain['left'] = temp_mountain['left'] + i
+    #     mountains.append(temp_mountain)
     
     print(visible_area(mountains))
