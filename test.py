@@ -1,5 +1,5 @@
 import unittest
-import another_sol as sut
+import solution as sut
 
 class TestMountainsVisibleArea(unittest.TestCase):
 
@@ -42,6 +42,10 @@ class TestMountainsVisibleArea(unittest.TestCase):
                 {'left': 9, 'right': 15, 'height': 3},
                 {'left': 8, 'right': 14, 'height': 3},
                 {'left': 0, 'right':  6, 'height': 3},], 20.75),
+            ([
+                {'left': 0, 'right': 4, 'height': 2},
+                {'left': 1, 'right': 5, 'height': 2},
+                {'left': 2, 'right':  6, 'height': 2},], 7.5)
         ]
         
         

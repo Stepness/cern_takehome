@@ -27,10 +27,10 @@ def mountain_intersections(index, mountains):
     temp_mountains = []
     temp_mountains.append(current_mountain)
     for i, next_mountain in enumerate(mountains[index+1:]):
-        sign = pow(-1, i+1)
         if(current_mountain['right'] >= next_mountain['left']):
             temp_mountains.append(next_mountain)
             if len(temp_mountains) > 1:
+                sign = pow(-1, i+1)
                 intersection_area += sign * _intersection_area(temp_mountains)
         else:
             break
@@ -42,9 +42,7 @@ def _inclusion_exclusion_principle(mountains: list) -> float:
 
     for index, mountain in enumerate(mountains):
         total_area += _mountain_area(mountain)
-        print(index)
-        if index > 0:
-            total_area += mountain_intersections(index-1, mountains)
+        total_area += mountain_intersections(index, mountains)
 
     return total_area
 
@@ -78,10 +76,16 @@ if __name__ == '__main__':
     # {'left': 0, 'right':  6, 'height': 3}
     # ]
     
-    for i in range(MAXIMUM_QUANTITY_OF_MOUNTAINS):
-        temp_mountain = {'left': 0, 'right': 6, 'height': 3}
-        temp_mountain['right'] = temp_mountain['right'] + i
-        temp_mountain['left'] = temp_mountain['left'] + i
-        mountains.append(temp_mountain)
+    # for i in range(MAXIMUM_QUANTITY_OF_MOUNTAINS):
+    #     temp_mountain = {'left': 0, 'right': 6, 'height': 3}
+    #     temp_mountain['right'] = temp_mountain['right'] + i
+    #     temp_mountain['left'] = temp_mountain['left'] + i
+    #     mountains.append(temp_mountain)
+    
+    mountains = [
+    {'left': 0, 'right': 4, 'height': 2},
+    {'left': 1, 'right': 5, 'height': 2},
+    {'left': 2, 'right':  6, 'height': 2}
+    ]
     
     print(visible_area(mountains))
