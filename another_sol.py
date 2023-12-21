@@ -1,3 +1,5 @@
+import itertools
+
 def _mountain_area(mountain: dict) -> float:
     return 0.5 * (mountain['right'] - mountain['left']) * mountain['height']
 
@@ -25,21 +27,24 @@ def mountain_intersections(index, mountains):
     total_intersection_area = 0
     current_mountain = mountains[index]
     temp_mountains = []
-    temp_mountains.append(current_mountain)
-    for j in range(len(mountains)):
-        for i, next_mountain in enumerate(mountains[index+1:]):
-            #Try combinations with only intersection triangles here. Then multiply by lenght of combination
-            if(current_mountain['right'] >= next_mountain['left']):
-                temp_mountains.append(next_mountain)
-                if len(temp_mountains) == j+2:
-                    sign = pow(-1, j+1)
-                    intersection_area = sign * _intersection_area(temp_mountains)
-                    total_intersection_area += intersection_area
-                    temp_mountains = []
-                    temp_mountains.append(current_mountain)
-            else:
-                break
-    
+    for i, next_mountain in enumerate(mountains[index+1:]):
+        if(current_mountain['right'] >= next_mountain['left']):
+            temp_mountains.append(next_mountain)
+  
+        else:
+            break
+        
+    #Powerset
+    if len(temp_mountains) > 0:
+        for i in range(1, len(temp_mountains) + 1):
+            intersected_mountains = (list(itertools.combinations(temp_mountains, i)))
+            for j, intersection in enumerate(intersected_mountains):
+                current_mountain_powerset = (list(intersection))
+                current_mountain_powerset.append(current_mountain)
+                sign = pow(-1, i)
+                intersection_area = sign * _intersection_area(current_mountain_powerset)
+                total_intersection_area += intersection_area
+        
     return total_intersection_area
 
 def _inclusion_exclusion_principle(mountains: list) -> float:
@@ -81,17 +86,17 @@ if __name__ == '__main__':
     # {'left': 0, 'right':  6, 'height': 3}
     # ]
     
-    # for i in range(MAXIMUM_QUANTITY_OF_MOUNTAINS):
-    #     temp_mountain = {'left': 0, 'right': 6, 'height': 3}
-    #     temp_mountain['right'] = temp_mountain['right'] + i
-    #     temp_mountain['left'] = temp_mountain['left'] + i
-    #     mountains.append(temp_mountain)
+    for i in range(MAXIMUM_QUANTITY_OF_MOUNTAINS):
+        temp_mountain = {'left': 0, 'right': 6, 'height': 3}
+        temp_mountain['right'] = temp_mountain['right'] + i
+        temp_mountain['left'] = temp_mountain['left'] + i
+        mountains.append(temp_mountain)
     
-    mountains = [
-    {'left': 0, 'right': 4, 'height': 2},
-    {'left': 1, 'right': 5, 'height': 2},
-    {'left': 2, 'right': 6, 'height': 2},
-    {'left': 3, 'right': 7, 'height': 2}
-    ]
+    # mountains = [
+    # {'left': 0, 'right': 4, 'height': 2},
+    # {'left': 1, 'right': 5, 'height': 2},
+    # {'left': 2, 'right': 6, 'height': 2},
+    # {'left': 3, 'right': 7, 'height': 2}
+    # ]
     
     print(visible_area(mountains))
