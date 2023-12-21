@@ -1,5 +1,5 @@
 import unittest
-import solution as sut
+import another_sol as sut
 
 class TestMountainsVisibleArea(unittest.TestCase):
 
