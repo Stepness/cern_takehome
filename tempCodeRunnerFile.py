@@ -1,1 +1,1 @@
-append(current_mountain)
+sut

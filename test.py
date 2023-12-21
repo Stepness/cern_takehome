@@ -1,5 +1,7 @@
 import unittest
-import another_sol as sut
+import unittest.mock
+
+import solution as sut
 
 class TestMountainsVisibleArea(unittest.TestCase):
 
@@ -16,7 +18,7 @@ class TestMountainsVisibleArea(unittest.TestCase):
         area = sut.visible_area(mountains)
         self.assertEqual(area, expected_area)
 
-    def test_given_mountains_overlapping_in_same_spot_when_calculating_visible_area_then_return_biggest_area(self):
+    def test_given_nested_mountains_when_calculating_visible_area_then_return_biggest_area(self):
         mountains = [
             {'left': 9, 'right': 15, 'height': 3},
             {'left': 9, 'right': 15, 'height': 3},
@@ -65,6 +67,57 @@ class TestMountainsVisibleArea(unittest.TestCase):
         
         self.assertEqual(area, expected_area)
     
+    def test_given_maximum_mountains_when_calculating_visible_area_then_return_expected_value(self):
+        MAXIMUM_QUANTITY_OF_MOUNTAINS = 1000
+        expected_area = 2756.25 #Area of n identical mountains shifted by one is same as area of 1 mountain + (n-1)(area of 1 mountain  - intersection)
+        
+        mountains = []
+        for i in range(MAXIMUM_QUANTITY_OF_MOUNTAINS):
+            temp_mountain = {'left': 0, 'right': 6, 'height': 3}
+            temp_mountain['right'] = temp_mountain['right'] + i
+            temp_mountain['left'] = temp_mountain['left'] + i
+            mountains.append(temp_mountain)
+        
+        area = sut.visible_area(mountains)
+        
+        self.assertEqual(area, expected_area)
+    
+    def test_given_nested_mountains_when_removing_nested_ones_then_return_non_nested_mountains(self):
+        expected_mountains = [
+            {'left': 0, 'right': 100, 'height': 50},
+            {'left': 1, 'right': 101, 'height': 50},
+        ]
+        
+        mountains = [
+            {'left': 0, 'right': 100, 'height': 50},
+            {'left': 0, 'right': 100, 'height': 50},
+            {'left': 0, 'right': 100, 'height': 50},
+            {'left': 1, 'right': 101, 'height': 50},
+        ]
+        
+        non_nested_mountains = sut.remove_nested_mountains(mountains)
+        
+        self.assertListEqual(non_nested_mountains, expected_mountains)
+        
+        
+    @unittest.mock.patch("solution.inclusion_exclusion_principle")
+    def test_given_mountains_when_calculating_visible_area_then_expect_sorted_non_nested_mountains(self, mock_method):
+        expected_mountains = [
+            {'left': 0, 'right': 100, 'height': 50},
+            {'left': 1, 'right': 101, 'height': 50},
+            {'left': 2, 'right': 102, 'height': 50},
+        ]
 
+        mountains = [
+            {'left': 1, 'right': 101, 'height': 50},
+            {'left': 0, 'right': 100, 'height': 50},
+            {'left': 2, 'right': 102, 'height': 50},
+            {'left': 2, 'right': 102, 'height': 50}
+        ]
+
+        sut.visible_area(mountains)
+
+        mock_method.assert_called_once_with(expected_mountains)
+        
 if __name__ == '__main__':
     unittest.main()
