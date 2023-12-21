@@ -1,5 +1,5 @@
 import unittest
-import solution as sut
+import another_sol as sut
 
 class TestMountainsVisibleArea(unittest.TestCase):
 
@@ -7,9 +7,11 @@ class TestMountainsVisibleArea(unittest.TestCase):
         mountains = [
             {'left': 0, 'right': 1000, 'height': 500},
             {'left': 1000, 'right':  2000, 'height': 500},
+            {'left': 2000, 'right':  3000, 'height': 500},
+            {'left': 4000, 'right':  5000, 'height': 500},
         ]
         
-        expected_area = 2 * 250_000
+        expected_area = 4 * 250_000
         
         area = sut.visible_area(mountains)
         self.assertEqual(area, expected_area)
